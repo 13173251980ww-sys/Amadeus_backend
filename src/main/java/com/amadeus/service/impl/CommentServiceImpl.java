@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,14 +41,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     public void addComment(Comment comment){
-        if(comment.getUsername()==null||comment.getUsername().trim().isEmpty()){
-            throw new ServiceException(400,"用户名不能为空");
-        }
-        if(comment.getContent()==null || comment.getContent().trim().isEmpty()){
-            throw new ServiceException(400,"评论内容不能为空");
-        }
-        if(comment.getIconurl()==null || comment.getIconurl().trim().isEmpty()){
-            throw new ServiceException(400,"头像url不能为空");
+        if(!StringUtils.hasText(comment.getUsername())||!StringUtils.hasText(comment.getContent())||!StringUtils.hasText(comment.getIconurl())){
+            throw new ServiceException(400,"发表留言的表单不完整");
         }
         comment.setTime(LocalDateTime.now());
         commentMapper.addComment(comment);
