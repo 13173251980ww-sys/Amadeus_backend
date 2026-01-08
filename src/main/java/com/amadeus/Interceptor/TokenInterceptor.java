@@ -62,6 +62,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
        //6.放行
        log.info("令牌合法，放行");
+       log.info(String.valueOf(response.getStatus()));
        return true;
    }
 }
