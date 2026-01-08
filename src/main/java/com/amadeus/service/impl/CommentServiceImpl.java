@@ -1,15 +1,15 @@
 package com.amadeus.service.impl;
 
+import com.amadeus.exception.ServiceException;
 import com.amadeus.mapper.CommentMapper;
 import com.amadeus.pojo.Comment;
-import com.amadeus.pojo.PageResult;
 import com.amadeus.service.CommentService;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,17 @@ public class CommentServiceImpl implements CommentService {
             return new PageInfo<>(list);
     }
 
+    @Transactional
     public void addComment(Comment comment){
+        if(comment.getUsername()==null||comment.getUsername().trim().isEmpty()){
+            throw new ServiceException(400,"用户名不能为空");
+        }
+        if(comment.getContent()==null || comment.getContent().trim().isEmpty()){
+            throw new ServiceException(400,"评论内容不能为空");
+        }
+        if(comment.getIconurl()==null || comment.getIconurl().trim().isEmpty()){
+            throw new ServiceException(400,"头像url不能为空");
+        }
         comment.setTime(LocalDateTime.now());
         commentMapper.addComment(comment);
         log.info("新增评论: {}", comment);
