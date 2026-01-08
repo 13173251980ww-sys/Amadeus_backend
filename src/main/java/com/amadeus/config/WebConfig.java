@@ -17,7 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //注册自定义拦截器对象
         registry.addInterceptor(tokenInterceptor).
-                addPathPatterns("/**");
+                addPathPatterns("/**")
+                .excludePathPatterns("/error");
     }
 
 
