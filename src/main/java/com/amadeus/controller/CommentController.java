@@ -1,5 +1,6 @@
 package com.amadeus.controller;
 
+import com.amadeus.anno.LogOperation;
 import com.amadeus.pojo.Comment;
 import com.amadeus.pojo.Result;
 import com.amadeus.service.CommentService;
@@ -23,6 +24,7 @@ public class CommentController {
         return Result.success(commentService.getCommentsByPage(pageNum,pageSize));
     }
 
+    @LogOperation
     @PostMapping
     public Result addComment(@RequestBody Comment comment){
         log.info(comment.toString());
