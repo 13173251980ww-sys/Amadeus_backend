@@ -28,12 +28,16 @@ public class UploadController {
         if(!file.isEmpty()){
             //获取原文件名
             String originalFilename=file.getOriginalFilename();
+            log.info("原文件名为"+originalFilename);
             //获取原扩展名
             String extName=originalFilename.substring(originalFilename.lastIndexOf("."));
+            log.info("原扩展名为"+extName);
             //随机UUID生成唯一文件名
             String uniqueFileName= UUID.randomUUID().toString().replace("-","")+extName;
+            log.info("唯一文件名为"+uniqueFileName);
             //上传文件
             String url = aliyunOSSOperator.upload(file.getBytes(), uniqueFileName);
+            log.info("上传图片的url为"+url);
             return Result.success(url);
         }
         return Result.error(400,"上传失败");

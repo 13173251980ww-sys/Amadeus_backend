@@ -4,6 +4,7 @@ import com.aliyun.oss.*;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
 import com.aliyun.oss.common.comm.SignVersion;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class AliyunOSSOperator {
 
     private String endpoint="oss-cn-beijing.aliyuncs.com";
@@ -24,9 +26,12 @@ public class AliyunOSSOperator {
         // 填写Object完整路径，例如202406/1.png。Object完整路径中不能包含Bucket名称。
         //获取当前系统日期的字符串,格式为 yyyy/MM
         String dir = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM"));
+        log.info("系统日期为{}",dir);
         //生成一个新的不重复的文件名
         String newFileName = UUID.randomUUID() + originalFilename.substring(originalFilename.lastIndexOf("."));
+        log.info("新的文件名为{}",newFileName);
         String objectName = dir + "/" + newFileName;
+        log.info("上传的文件路径为:{}",objectName);
 
         // 创建OSSClient实例。
         ClientBuilderConfiguration clientBuilderConfiguration = new ClientBuilderConfiguration();
@@ -44,6 +49,11 @@ public class AliyunOSSOperator {
             ossClient.shutdown();
         }
 
-        return endpoint.split("//")[0] + "//" + bucketName + "." + endpoint.split("//")[1] + "/" + objectName;
+        log.info("endpoint为{}",endpoint);
+
+//        String info=endpoint.split("//")[0] + "//" + bucketName + "." + endpoint.split("//")[1] + "/" + objectName;
+        String info = "https://" + bucketName + "." + endpoint + "/" + objectName;
+        log.info("url{}",info);
+        return info;
     }
 }
